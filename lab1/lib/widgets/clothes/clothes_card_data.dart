@@ -14,7 +14,8 @@ class ClothesCardData extends StatelessWidget {
             child: Image.network(
                 image,
                 fit: BoxFit.contain,
-                alignment: Alignment.bottomRight)),
+                alignment: Alignment.bottomRight)
+        ),
         const Divider(
           thickness: 1,
           indent: 15,

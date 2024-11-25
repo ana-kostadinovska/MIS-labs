@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/clothes_model.dart';
+import '../../models/clothes_model.dart';
 import 'clothes_card_data.dart';
 
 class ClothesCard extends StatelessWidget {
@@ -16,7 +16,7 @@ class ClothesCard extends StatelessWidget {
     return Material(
       color: Colors.white,
       child: InkWell(
-        borderRadius: BorderRadius.circular(7),
+        borderRadius: BorderRadius.circular(10),
         enableFeedback: true,
         splashColor: Colors.grey[600],
         onTap: () => {
@@ -26,11 +26,18 @@ class ClothesCard extends StatelessWidget {
           )
         },
         child: Container(
-          margin: const EdgeInsets.all(6.0),
-          padding: const EdgeInsets.all(4.0),
+          margin: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.withOpacity(0.5), width: 2),
-              borderRadius: BorderRadius.circular(10)
+            color: const Color(0xFFF2F1EF),
+            borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.3),
+                  blurRadius: 6,
+                  offset: const Offset(0, 3),
+                ),
+              ],
           ),
           child: ClothesCardData(
               image: image,
