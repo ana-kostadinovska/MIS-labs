@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/clothes_model.dart';
+import '../../models/clothes_model.dart';
 import 'clothes_card.dart';
 
 class ClothesGrid extends StatefulWidget {
