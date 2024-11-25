@@ -7,21 +7,32 @@ class TitleDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Chip(
-      backgroundColor: Colors.grey[100],
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
-      label: Text(
-        "${name[0].toUpperCase()}${name.substring(1)}",
-        style: const TextStyle(fontSize: 28, color: Colors.black),
-      ),
-      avatar: CircleAvatar(
-        backgroundColor: Colors.pink[100],
-        child: Text(
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        CircleAvatar(
+          backgroundColor: Colors.pink[100],
+          child: Text(
             id.toString(),
-            style: const TextStyle(color: Colors.white),),
-      ),
+            style: const TextStyle(color: Colors.white),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Text(
+            "${name[0].toUpperCase()}${name.substring(1)}",
+            style: const TextStyle(
+                fontSize: 28,
+                color: Colors.black,
+                fontWeight: FontWeight.bold
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

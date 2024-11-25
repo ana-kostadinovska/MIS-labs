@@ -16,12 +16,6 @@ class DataDetails extends StatelessWidget {
       ),
       decoration: const BoxDecoration(
         color: Colors.white,
-        border: Border(top: BorderSide(width: 2, color: Colors.grey)
-        ),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(50),
-          topRight: Radius.circular(50),
-        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black26,
