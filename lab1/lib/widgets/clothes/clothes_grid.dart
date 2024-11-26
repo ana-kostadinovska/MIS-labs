@@ -18,7 +18,7 @@ class _ClothesGridState extends State<ClothesGrid> {
       crossAxisSpacing: 4,
       mainAxisSpacing: 4,
       semanticChildCount: 250,
-      childAspectRatio: 200 / 244,
+      childAspectRatio: 0.75,
       physics: const BouncingScrollPhysics(),
       children: widget.clothes.map((clothes) =>
           ClothesCard(id: clothes.id, name: clothes.name, image: clothes.image, description: clothes.description, price: clothes.price,

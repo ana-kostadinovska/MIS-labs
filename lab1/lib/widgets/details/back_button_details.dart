@@ -9,14 +9,17 @@ class BackButtonDetails extends StatelessWidget {
       onPressed: () => Navigator.pop(context),
       tooltip: 'Go back',
       backgroundColor: Colors.pink[100],
-      label: const Text("Back",
+      label: const Text(
+          "Back",
           style: const TextStyle(
               fontSize: 18,
-              color: Colors.white)
+              color: Colors.white
+          )
       ),
       icon: const Icon(
           Icons.arrow_back_rounded,
-          color: Colors.white),
+          color: Colors.white
+      ),
     );
   }
 }
