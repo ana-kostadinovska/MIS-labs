@@ -41,7 +41,7 @@ class DataDetails extends StatelessWidget {
             Text(
               description,
               style: const TextStyle(
-                fontSize: 22,
+                fontSize: 20,
                 color: Colors.black54,
                 height: 1.5,
               ),

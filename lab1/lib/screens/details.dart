@@ -15,14 +15,17 @@ class Details extends StatelessWidget {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top),
+            top: MediaQuery.of(context).padding.top
+        ),
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
             ImageDetails(
-                image: arguments.image),
+                image: arguments.image
+            ),
             TitleDetails(
-                id: arguments.id, name: arguments.name),
+                id: arguments.id, name: arguments.name
+            ),
             DataDetails(
                 id: arguments.id,
                 description: arguments.description,
