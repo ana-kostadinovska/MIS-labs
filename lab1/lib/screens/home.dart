@@ -34,18 +34,27 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         backgroundColor: Colors.pink[100],
         leading: IconButton(onPressed: () {},
-            icon: const Icon(Icons.menu, color: Colors.white, size: 24,)),
+            icon: const Icon(
+              Icons.menu,
+              color: Colors.white,
+              size: 24,)
+        ),
         title: const Text(
             "211006",
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 36,
-                fontWeight: FontWeight.bold)
+                fontWeight: FontWeight.bold
+            )
         ),
         centerTitle: true,
         actions: [
           IconButton(onPressed: () {},
-              icon: const Icon(Icons.settings, color: Colors.white, size: 24))
+              icon: const Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                  size: 24)
+          )
         ],
       ),
       backgroundColor: Colors.white,
