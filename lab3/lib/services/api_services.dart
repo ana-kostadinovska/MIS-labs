@@ -37,4 +37,14 @@ class ApiService {
       throw Exception("Failed to load random joke!");
     }
   }
+
+  static Future<Joke> getJokeById(String id) async {
+    final response = await http.get(Uri.parse("https://official-joke-api.appspot.com/jokes/$id"));
+    if (response.statusCode == 200) {
+      print("Success: ${response.body}");
+      return Joke.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to get joke with id: $id!");
+    }
+  }
 }

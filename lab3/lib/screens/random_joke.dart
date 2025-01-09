@@ -11,7 +11,7 @@ class RandomJoke extends StatefulWidget {
 }
 
 class _RandomJokeState extends State<RandomJoke> {
-  Joke randomJoke = Joke(id: 0, type: "", setup: "", punchline: "");
+  Joke randomJoke = Joke(id: "", type: "", setup: "", punchline: "");
 
   @override
   void initState() {

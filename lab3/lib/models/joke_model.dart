@@ -1,5 +1,5 @@
 class Joke {
-  int id;
+  String id;
   String type;
   String setup;
   String punchline;
@@ -8,7 +8,7 @@ class Joke {
 
   factory Joke.fromJson(Map<String, dynamic> json) {
     return Joke(
-      id: json['id'],
+      id: json['id'].toString(),
       type: json['type'],
       setup: json['setup'],
       punchline: json['punchline'],
