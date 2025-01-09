@@ -6,6 +6,7 @@ import 'package:lab3/providers/joke_provider.dart';
 import 'package:lab3/screens/home.dart';
 import 'package:lab3/screens/jokes.dart';
 import 'package:lab3/screens/random_joke.dart';
+import 'package:lab3/screens/register.dart';
 import 'package:lab3/services/notifications_service.dart';
 import 'package:provider/provider.dart';
 
@@ -43,7 +44,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.grey),
       initialRoute: "/",
       routes: {
-        "/": (context) => const Home(),
+        "/": (context) => const RegisterScreen(),
+        "/home": (context) => const Home(),
         "/jokes": (context) => const Jokes(),
         "/random_joke": (context) => const RandomJoke(),
       },
