@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import '../models/exam_model.dart';
 
 class MapService {
-  Future<bool> handleLocationPermission() async {
+  Future<bool> locationPermission() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       return false;
@@ -27,8 +27,8 @@ class MapService {
     return true;
   }
 
-  Future<LatLng?> getCurrentLocation() async {
-    final hasPermission = await handleLocationPermission();
+  Future<LatLng?> getLocation() async {
+    final hasPermission = await locationPermission();
     if (!hasPermission) return null;
 
     try {
@@ -60,16 +60,13 @@ class MapService {
 
   Future<List<LatLng>> getRoute(LatLng currentPosition, LatLng destination) async {
     try {
-      final response = await http.get(Uri.parse(
-          'http://router.project-osrm.org/route/v1/driving/${currentPosition.longitude},${currentPosition.latitude};${destination.longitude},${destination.latitude}?overview=full&geometries=geojson'));
+      final response = await http.get(Uri.parse('http://router.project-osrm.org/route/v1/driving/${currentPosition.longitude},${currentPosition.latitude};${destination.longitude},${destination.latitude}?overview=full&geometries=geojson'));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final List<dynamic> coordinates = data['routes'][0]['geometry']['coordinates'];
 
-        return coordinates
-            .map((coord) => LatLng(coord[1], coord[0]))
-            .toList();
+        return coordinates.map((coord) => LatLng(coord[1], coord[0])).toList();
       } else {
         throw Exception('Failed to fetch route');
       }

@@ -14,8 +14,8 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  LatLng? _currentPosition;
-  List<LatLng> _routePoints = [];
+  LatLng? position;
+  List<LatLng> pointsRoute = [];
   bool _isLoadingRoute = false;
   bool _isLoadingLocation = true;
   LatLng _mapCenter = LatLng(42.0047678, 21.4097791);
@@ -24,13 +24,13 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-    _getCurrentLocation();
+    getLocation();
     _calculateCenterOfExams();
   }
 
-  Future<void> _getCurrentLocation() async {
+  Future<void> getLocation() async {
     try {
-      _currentPosition = await _mapService.getCurrentLocation();
+      position = await _mapService.getLocation();
       setState(() {
         _isLoadingLocation = false;
       });
@@ -50,7 +50,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _getRoute(LatLng destination) async {
-    if (_currentPosition == null) {
+    if (position == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Current location is not available.')),
       );
@@ -58,12 +58,12 @@ class _MapScreenState extends State<MapScreen> {
     }
 
     setState(() {
-      _routePoints = [];
+      pointsRoute = [];
       _isLoadingRoute = true;
     });
 
     try {
-      _routePoints = await _mapService.getRoute(_currentPosition!, destination);
+      pointsRoute = await _mapService.getRoute(position!, destination);
       setState(() {
         _isLoadingRoute = false;
       });
@@ -89,10 +89,7 @@ class _MapScreenState extends State<MapScreen> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Location: ${exam.location}'),
-              Text('Latitude: ${exam.latitude}'),
-              Text('Longitude: ${exam.longitude}'),
-              Text('Time: ${exam.dateTime}'),
+              Text('Location: ${exam.location}'), Text('Latitude: ${exam.latitude}'), Text('Longitude: ${exam.longitude}'), Text('Time: ${exam.dateTime}'),
             ],
           ),
           actions: [
@@ -119,24 +116,21 @@ class _MapScreenState extends State<MapScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Map Screen')),
-      body: _isLoadingLocation
-          ? const Center(child: CircularProgressIndicator())
-          : FlutterMap(
+      body: _isLoadingLocation ? const Center(child: CircularProgressIndicator()) : FlutterMap(
         options: MapOptions(
           center: _mapCenter,
           zoom: 15.0,
         ),
         children: [
           TileLayer(
-            urlTemplate:
-            'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+            urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
             subdomains: ['a', 'b', 'c'],
           ),
-          if (_currentPosition != null)
+          if (position != null)
             MarkerLayer(
               markers: [
                 Marker(
-                  point: _currentPosition!,
+                  point: position!,
                   builder: (ctx) => const Icon(
                     Icons.person_pin_circle,
                     color: Colors.blue,
@@ -162,11 +156,11 @@ class _MapScreenState extends State<MapScreen> {
               );
             }).toList(),
           ),
-          if (_routePoints.isNotEmpty)
+          if (pointsRoute.isNotEmpty)
             PolylineLayer(
               polylines: [
                 Polyline(
-                  points: _routePoints,
+                  points: pointsRoute,
                   color: Colors.blue,
                   strokeWidth: 4.0,
                 ),

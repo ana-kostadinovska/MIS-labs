@@ -4,6 +4,7 @@ import 'package:lab4/screens/create_exam.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
 import '../models/exam_model.dart';
+import '../services/locator_service.dart';
 import 'map.dart';
 
 class ExamCalendar extends StatefulWidget {
@@ -14,6 +15,7 @@ class ExamCalendar extends StatefulWidget {
 }
 
 class _ExamCalendarState extends State<ExamCalendar> {
+  late LocationMonitoringService _locationService;
   late final ValueNotifier<List<Exam>> _selectedEvents;
   late Map<DateTime, List<Exam>> _events;
   final ExamService _examService = ExamService();
@@ -24,6 +26,8 @@ class _ExamCalendarState extends State<ExamCalendar> {
   @override
   void initState() {
     super.initState();
+    _locationService = LocationMonitoringService(exams: kEvents.values.expand((e) => e).toList(), context: context);
+    _locationService.startMonitoring();
     _selectedDay = _focusedDay;
     _events = {};
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
@@ -33,6 +37,7 @@ class _ExamCalendarState extends State<ExamCalendar> {
   @override
   void dispose() {
     _selectedEvents.dispose();
+    _locationService.stopMonitoring();
     super.dispose();
   }
 
@@ -199,14 +204,6 @@ final Map<DateTime, List<Exam>> kEvents = {
       dateTime: DateTime(2025, 1, 17, 11, 0),
       latitude: 42.0053,
       longitude: 21.4085,
-    ),
-    Exam(
-      id: '5',
-      name: 'Mobile Development',
-      location: 'Lab 12, TMF',
-      dateTime: DateTime(2025, 1, 17, 11, 0),
-      latitude: 42.0050,
-      longitude: 21.4075,
     ),
   ],
 

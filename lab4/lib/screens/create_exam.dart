@@ -11,11 +11,11 @@ class CreateExam extends StatefulWidget {
 }
 
 class _CreateExamState extends State<CreateExam> {
-  final _nameController = TextEditingController();
-  final _locationController = TextEditingController();
-  final _latitudeController = TextEditingController();
-  final _longitudeController = TextEditingController();
-  DateTime? _selectedDateTime;
+  final nameController = TextEditingController();
+  final locationController = TextEditingController();
+  final latitudeController = TextEditingController();
+  final longitudeController = TextEditingController();
+  DateTime? selectedDateTime;
 
   @override
   Widget build(BuildContext context) {
@@ -27,30 +27,24 @@ class _CreateExamState extends State<CreateExam> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextField(
-              controller: _nameController,
+            TextField(controller: nameController,
               decoration: const InputDecoration(labelText: 'Exam Name'),
             ),
-            TextField(
-              controller: _locationController,
+            TextField(controller: locationController,
               decoration: const InputDecoration(labelText: 'Location'),
             ),
-            TextField(
-              controller: _latitudeController,
+            TextField(controller: latitudeController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(labelText: 'Latitude'),
             ),
-            TextField(
-              controller: _longitudeController,
+            TextField(controller: longitudeController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(labelText: 'Longitude'),
             ),
             ListTile(
-              title: const Text('Date & Time'),
+              title: const Text('Date and time'),
               subtitle: Text(
-                _selectedDateTime == null
-                    ? 'Select a date'
-                    : _selectedDateTime!.toString(),
+                selectedDateTime == null ? 'Select a date' : selectedDateTime!.toString(),
               ),
               onTap: _pickDateTime,
             ),
@@ -79,12 +73,7 @@ class _CreateExamState extends State<CreateExam> {
       );
       if (pickedTime != null) {
         setState(() {
-          _selectedDateTime = DateTime(
-            pickedDate.year,
-            pickedDate.month,
-            pickedDate.day,
-            pickedTime.hour,
-            pickedTime.minute,
+          selectedDateTime = DateTime(pickedDate.year, pickedDate.month, pickedDate.day, pickedTime.hour, pickedTime.minute,
           );
         });
       }
@@ -92,20 +81,20 @@ class _CreateExamState extends State<CreateExam> {
   }
 
   void _addExam() {
-    if (_nameController.text.isNotEmpty &&
-        _locationController.text.isNotEmpty &&
-        _latitudeController.text.isNotEmpty &&
-        _longitudeController.text.isNotEmpty &&
-        _selectedDateTime != null) {
-      final latitude = double.tryParse(_latitudeController.text);
-      final longitude = double.tryParse(_longitudeController.text);
+    if (nameController.text.isNotEmpty &&
+        locationController.text.isNotEmpty &&
+        latitudeController.text.isNotEmpty &&
+        longitudeController.text.isNotEmpty &&
+        selectedDateTime != null) {
+      final latitude = double.tryParse(latitudeController.text);
+      final longitude = double.tryParse(longitudeController.text);
 
       if (latitude != null && longitude != null) {
         final exam = Exam(
           id: DateTime.now().toString(),
-          name: _nameController.text,
-          location: _locationController.text,
-          dateTime: _selectedDateTime!,
+          name: nameController.text,
+          location: locationController.text,
+          dateTime: selectedDateTime!,
           latitude: latitude,
           longitude: longitude,
         );
