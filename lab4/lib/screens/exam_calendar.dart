@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lab4/services/exam_service.dart';
 import 'package:lab4/screens/create_exam.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
 import '../models/exam_model.dart';
 import 'map.dart';
 
@@ -16,6 +15,8 @@ class ExamCalendar extends StatefulWidget {
 
 class _ExamCalendarState extends State<ExamCalendar> {
   late final ValueNotifier<List<Exam>> _selectedEvents;
+  late Map<DateTime, List<Exam>> _events;
+  final ExamService _examService = ExamService();
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
@@ -24,6 +25,7 @@ class _ExamCalendarState extends State<ExamCalendar> {
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
+    _events = {};
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
     _loadStoredEvents();
   }
@@ -35,29 +37,14 @@ class _ExamCalendarState extends State<ExamCalendar> {
   }
 
   List<Exam> _getEventsForDay(DateTime day) {
-    return kEvents[DateTime(day.year, day.month, day.day)] ?? [];
+    return _events[DateTime(day.year, day.month, day.day)] ?? [];
   }
 
   Future<void> _loadStoredEvents() async {
-    final prefs = await SharedPreferences.getInstance();
-    final storedEvents = prefs.getString('user_events');
-
-    if (storedEvents != null) {
-      final decodedEvents = jsonDecode(storedEvents) as Map<String, dynamic>;
-      decodedEvents.forEach((key, value) {
-        final date = DateTime.parse(key);
-        final exams = (value as List).map((e) => Exam.fromJson(e)).toList();
-        kEvents[date] = exams;
-      });
-    }
-  }
-
-  Future<void> _saveStoredEvents() async {
-    final prefs = await SharedPreferences.getInstance();
-    final encodedEvents = kEvents.map((key, value) {
-      return MapEntry(key.toIso8601String(), value.map((e) => e.toJson()).toList());
+    _events = await _examService.loadEvents();
+    setState(() {
+      _selectedEvents.value = _getEventsForDay(_selectedDay!);
     });
-    await prefs.setString('user_events', jsonEncode(encodedEvents));
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
@@ -72,13 +59,16 @@ class _ExamCalendarState extends State<ExamCalendar> {
 
   void _addExam(Exam exam) {
     setState(() {
-      final key = DateTime(exam.dateTime.year, exam.dateTime.month, exam.dateTime.day);
-      if (kEvents[key] == null) {
-        kEvents[key] = [];
-      }
-      kEvents[key]!.add(exam);
+      _examService.addExam(exam, _events);
+      _selectedEvents.value = _getEventsForDay(_selectedDay!);
     });
-    _saveStoredEvents();
+  }
+
+  void _deleteExam(Exam exam) {
+    setState(() {
+      _examService.deleteExam(exam, _events);
+      _selectedEvents.value = _getEventsForDay(_selectedDay!);
+    });
   }
 
   @override
@@ -105,7 +95,7 @@ class _ExamCalendarState extends State<ExamCalendar> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => MapScreen(
-                    exams: kEvents.values.expand((examList) => examList).toList(),
+                    exams: _events.values.expand((examList) => examList).toList(),
                   ),
                 ),
               );
@@ -148,6 +138,7 @@ class _ExamCalendarState extends State<ExamCalendar> {
                 return ListView.builder(
                   itemCount: value.length,
                   itemBuilder: (context, index) {
+                    final exam = value[index];
                     return Container(
                       margin: const EdgeInsets.symmetric(
                         horizontal: 12.0,
@@ -158,12 +149,16 @@ class _ExamCalendarState extends State<ExamCalendar> {
                         borderRadius: BorderRadius.circular(12.0),
                       ),
                       child: ListTile(
-                        title: Text(value[index].name),
+                        title: Text(exam.name),
                         subtitle: Text(
-                          '${value[index].location}\n'
-                              '${DateFormat.Hm().format(value[index].dateTime)}',
+                          '${exam.location}\n'
+                              '${DateFormat.Hm().format(exam.dateTime)}',
                         ),
                         isThreeLine: true,
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete),
+                          onPressed: () => _deleteExam(exam),
+                        ),
                       ),
                     );
                   },
@@ -184,16 +179,16 @@ final Map<DateTime, List<Exam>> kEvents = {
       name: 'Databases',
       location: 'Lab 200ab, TMF',
       dateTime: DateTime(2025, 1, 16, 9, 0),
-      latitude: 41.9981,
-      longitude: 21.4254,
+      latitude: 42.0045,
+      longitude: 21.4105,
     ),
     Exam(
       id: '2',
       name: 'Web Programming',
       location: 'Lab 215, TMF',
       dateTime: DateTime(2025, 1, 16, 14, 0),
-      latitude: 41.9992,
-      longitude: 21.4265,
+      latitude: 42.0039,
+      longitude: 21.4093,
     ),
   ],
   DateTime(2025, 1, 17): [
@@ -202,12 +197,20 @@ final Map<DateTime, List<Exam>> kEvents = {
       name: 'Fundamentals of Web Design',
       location: 'Lab 138, TMF',
       dateTime: DateTime(2025, 1, 17, 11, 0),
-      latitude: 41.9975,
-      longitude: 21.4239,
+      latitude: 42.0053,
+      longitude: 21.4085,
+    ),
+    Exam(
+      id: '5',
+      name: 'Mobile Development',
+      location: 'Lab 12, TMF',
+      dateTime: DateTime(2025, 1, 17, 11, 0),
+      latitude: 42.0050,
+      longitude: 21.4075,
     ),
   ],
+
 };
 
 final kFirstDay = DateTime(2010, 1, 1);
 final kLastDay = DateTime(2025, 12, 31);
-
